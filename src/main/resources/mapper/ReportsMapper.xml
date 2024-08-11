@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.myvedio.mapper.ReportsMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.myvedio.entity.ReportsEntity">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="reportedBy" column="reported_by" jdbcType="BIGINT"/>
+        <result property="videoId" column="video_id" jdbcType="BIGINT"/>
+        <result property="commentId" column="comment_id" jdbcType="BIGINT"/>
+        <result property="reason" column="reason" jdbcType="VARCHAR"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,reported_by,video_id,
+        comment_id,reason,created_at
+    </sql>
+</mapper>
