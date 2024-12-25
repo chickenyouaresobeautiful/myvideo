@@ -1,0 +1,41 @@
+package com.daiweij.myvedio.modules.sys.controller;
+
+import com.daiweij.myvedio.common.utils.R;
+import com.daiweij.myvedio.modules.sys.entity.CategoriesEntity;
+import com.daiweij.myvedio.modules.sys.service.CategoriesService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/categories")
+public class CategoriesController {
+    @Autowired
+    private CategoriesService categoriesService;
+
+    @GetMapping("/get/{id}")
+    public R<CategoriesEntity> get(@PathVariable int id) {
+        return R.success(categoriesService.getById(id));
+    }
+
+    @GetMapping("/list")
+    public R<List<CategoriesEntity>> list() {
+        return R.success(categoriesService.list());
+    }
+
+    @PostMapping("/save")
+    public R<Boolean> save(@RequestBody CategoriesEntity categoriesEntity) {
+        return R.success(categoriesService.save(categoriesEntity));
+    }
+
+    @PutMapping("/update")
+    public R<Boolean> update(@RequestBody CategoriesEntity categoriesEntity) {
+        return R.success(categoriesService.updateById(categoriesEntity));
+    }
+
+    @DeleteMapping("/delete")
+    public R<Boolean> delete(@RequestBody List<Integer> ids) {
+        return R.success(categoriesService.removeByIds(ids));
+    }
+}

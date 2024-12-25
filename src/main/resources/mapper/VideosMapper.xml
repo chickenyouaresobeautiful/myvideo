@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.myvedio.mapper.VideosMapper">
+<mapper namespace="com.daiweij.myvedio.modules.sys.mapper.VideosMapper">
 
-    <resultMap id="BaseResultMap" type="com.example.myvedio.entity.VideosEntity">
+    <resultMap id="BaseResultMap" type="com.daiweij.myvedio.modules.sys.entity.VideosEntity">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="userId" column="user_id" jdbcType="BIGINT"/>
         <result property="title" column="title" jdbcType="VARCHAR"/>
