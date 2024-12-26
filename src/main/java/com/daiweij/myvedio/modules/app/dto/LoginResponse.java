@@ -1,4 +1,4 @@
-package com.daiweij.myvedio.modules.app.form;
+package com.daiweij.myvedio.modules.app.dto;
 
 import com.daiweij.myvedio.modules.sys.entity.UsersEntity;
 import lombok.Data;

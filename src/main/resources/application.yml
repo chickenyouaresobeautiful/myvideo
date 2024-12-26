@@ -10,9 +10,23 @@ spring:
     hikari:
       max-lifetime: 300000
 
+  data:
+    redis:
+      host: 47.99.75.148
+      port: 6379
+      timeout: 5000
+
   datasource.hikari:
     maximum-pool-size: 10
 
   mybatis-plus:
     mapper-locations: classpath*:mapper/*.xml
     type-aliases-package: com.daiweij.modules.sys.entity
+
+sms:
+  appcode: 8ab8243432e74fe2ab352045d3453553
+  smsSignId: 2e65b1bb3d054466b82f0c9d125465e2
+  templateId: 908e94ccf08b4476ba6c876d13f084ad
+  host: https://gyytz.market.alicloudapi.com
+  path: /sms/smsSend
+  expiry-time: 10 # 验证码有效期，单位：分钟

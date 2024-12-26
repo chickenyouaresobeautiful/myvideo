@@ -3,14 +3,18 @@ package com.daiweij.myvedio.modules.app.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.daiweij.myvedio.common.exception.CustomException;
 import com.daiweij.myvedio.common.utils.JwtUtils;
-import com.daiweij.myvedio.modules.app.form.LoginRequest;
-import com.daiweij.myvedio.modules.app.form.LoginResponse;
+import com.daiweij.myvedio.modules.app.dto.LoginRequest;
+import com.daiweij.myvedio.modules.app.dto.LoginResponse;
+import com.daiweij.myvedio.modules.app.dto.RegisterRequest;
 import com.daiweij.myvedio.modules.app.service.AppLoginService;
 import com.daiweij.myvedio.modules.sys.entity.UsersEntity;
 import com.daiweij.myvedio.modules.sys.service.UsersService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 import static com.daiweij.myvedio.common.utils.Constant.LoginType;
 
@@ -20,7 +24,7 @@ public class AppLoginServiceImpl implements AppLoginService {
     private UsersService usersService;
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
@@ -31,13 +35,31 @@ public class AppLoginServiceImpl implements AppLoginService {
             throw new CustomException("Password error");
         }
         // 生成token
-        String token = jwtUtils.generateToken(loginUser.getId(), loginUser.getUsername());
+        String token = JwtUtils.generateToken(loginUser.getId(), loginUser.getUsername());
         LoginResponse response = new LoginResponse();
         response.setToken(token);
         response.setMessage("login successful");
         response.setUser(loginUser);
 
         return response;
+    }
+
+    @Override
+    public void register(RegisterRequest registerRequest) {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setUsername(registerRequest.getUsername());
+        usersEntity.setPassword(DigestUtils.sha256Hex(registerRequest.getPassword()));
+        usersEntity.setPhoneNumber(registerRequest.getPhoneNumber());
+        String realSmsCode = (String) redisTemplate.opsForValue().get(registerRequest.getPhoneNumber());
+        if (!registerRequest.getVerificationCode().equals(realSmsCode)) {
+            throw new CustomException("Verification code error");
+        }
+        usersService.save(usersEntity);
+    }
+
+    @Override
+    public UsersEntity findByUsername(String username) {
+        return usersService.getOne(new QueryWrapper<UsersEntity>().eq("username", username));
     }
 
     private UsersEntity queryByAccountType(int loginType, String account) {
