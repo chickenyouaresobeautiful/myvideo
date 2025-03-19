@@ -36,7 +36,7 @@ public class UsersEntity implements Serializable {
     /**
      * 手机号码
      */
-    private String phoneNumber;
+    private String phone;
 
     /**
      * 加密后的密码
@@ -56,7 +56,7 @@ public class UsersEntity implements Serializable {
     /**
      * 头像URL
      */
-    private String profilePicture;
+    private String avatar;
 
     /**
      * 用户角色（普通用户、管理员等）

@@ -1,6 +1,7 @@
 package com.daiweij.myvedio.modules.app.controller;
 
 import com.daiweij.myvedio.common.exception.CustomException;
+import com.daiweij.myvedio.common.utils.LogUtil;
 import com.daiweij.myvedio.common.utils.R;
 import com.daiweij.myvedio.common.validator.ValidatorUtils;
 import com.daiweij.myvedio.modules.app.dto.LoginRequest;
@@ -19,8 +20,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/app")
 public class AppLoginController {
-    private Logger logger = LoggerFactory.getLogger(AppLoginController.class);
-
     @Autowired
     private AppLoginService appLoginService;
 
@@ -34,7 +33,7 @@ public class AppLoginController {
             LoginResponse response = appLoginService.login(loginRequest);
             return R.success(response);
         } catch (CustomException e) {
-            logger.error(e.getMessage());
+            LogUtil.error(this.getClass(), e.getMessage());
             return R.error(e.getCode(), e.getMsg());
         }
     }
@@ -48,7 +47,7 @@ public class AppLoginController {
             appLoginService.register(registerRequest);
             return R.success();
         } catch (CustomException e) {
-            logger.error(e.getMessage());
+            LogUtil.error(this.getClass(), e.getMessage());
             return R.error(e.getCode(), e.getMsg());
         }
     }
@@ -59,7 +58,7 @@ public class AppLoginController {
         if (username == null) {
             return R.error(500, "用户未登录");
         }
-        logger.info("当前用户：{}", username);
+        LogUtil.info(this.getClass(), "当前用户：" + username);
         UsersEntity byUsername = appLoginService.findByUsername(username);
         if (byUsername == null) {
             return R.error(500, "用户不存在");

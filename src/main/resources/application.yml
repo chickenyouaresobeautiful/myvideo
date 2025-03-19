@@ -23,6 +23,12 @@ spring:
     mapper-locations: classpath*:mapper/*.xml
     type-aliases-package: com.daiweij.modules.sys.entity
 
+  #文件大小限制（这里设置5MB，单位为字节）
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
 sms:
   appcode: 8ab8243432e74fe2ab352045d3453553
   smsSignId: 2e65b1bb3d054466b82f0c9d125465e2
@@ -30,3 +36,7 @@ sms:
   host: https://gyytz.market.alicloudapi.com
   path: /sms/smsSend
   expiry-time: 10 # 验证码有效期，单位：分钟
+
+# 上传目录
+file:
+  upload-dir: uploads

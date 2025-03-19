@@ -2,6 +2,7 @@ package com.daiweij.myvedio.modules.thirdparty.service.impl;
 
 import com.daiweij.myvedio.common.exception.CustomException;
 import com.daiweij.myvedio.common.utils.HttpUtils;
+import com.daiweij.myvedio.common.utils.LogUtil;
 import com.daiweij.myvedio.modules.thirdparty.service.ThirdPartyService;
 import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
@@ -18,8 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ThirdPartyServiceImpl implements ThirdPartyService {
-    private static final Logger logger = LoggerFactory.getLogger(ThirdPartyServiceImpl.class);
-
     @Value("${sms.appcode}")
     private String appcode;
 
@@ -43,8 +42,7 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
 
     @Override
     public void sendVerificationCode(String phoneNumber) {
-        logger.info("Sending SMS verification code to phone number: {}", phoneNumber);
-
+        LogUtil.info(this.getClass(), "Sending SMS verification code to phone number: " + phoneNumber);
         String method = "POST";
         String smsCode = generateVerificationCode();
         saveVerificationCode(phoneNumber, smsCode);
@@ -68,9 +66,9 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
              * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
              */
             HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
-            logger.info("SMS sent successfully, response: {}", response.toString());
+            LogUtil.info(this.getClass(), "SMS sent successfully, response: " + response.toString());
         } catch (Exception e) {
-            logger.error("Failed to send SMS to {}: {}", phoneNumber, e.getMessage(), e);
+            LogUtil.error(this.getClass(), "Failed to send SMS");
             throw new CustomException("Failed to send SMS", e);
         }
     }

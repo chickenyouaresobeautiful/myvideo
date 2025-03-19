@@ -3,6 +3,8 @@ package com.daiweij.myvedio.modules.app.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.daiweij.myvedio.common.exception.CustomException;
 import com.daiweij.myvedio.common.utils.JwtUtils;
+import com.daiweij.myvedio.common.utils.LogUtil;
+import com.daiweij.myvedio.modules.app.controller.AppLoginController;
 import com.daiweij.myvedio.modules.app.dto.LoginRequest;
 import com.daiweij.myvedio.modules.app.dto.LoginResponse;
 import com.daiweij.myvedio.modules.app.dto.RegisterRequest;
@@ -10,6 +12,8 @@ import com.daiweij.myvedio.modules.app.service.AppLoginService;
 import com.daiweij.myvedio.modules.sys.entity.UsersEntity;
 import com.daiweij.myvedio.modules.sys.service.UsersService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,7 @@ public class AppLoginServiceImpl implements AppLoginService {
         // 根据账号类型查询用户
         UsersEntity loginUser = queryByAccountType(loginRequest.getLoginType(), loginRequest.getUsername());
         // 校验密码
+        LogUtil.info(this.getClass(), DigestUtils.sha256Hex(loginRequest.getPassword()));
         if (!loginUser.getPassword().equals(DigestUtils.sha256Hex(loginRequest.getPassword()))) {
             throw new CustomException("Password error");
         }
@@ -49,7 +54,7 @@ public class AppLoginServiceImpl implements AppLoginService {
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setUsername(registerRequest.getUsername());
         usersEntity.setPassword(DigestUtils.sha256Hex(registerRequest.getPassword()));
-        usersEntity.setPhoneNumber(registerRequest.getPhoneNumber());
+        usersEntity.setPhone(registerRequest.getPhoneNumber());
         String realSmsCode = (String) redisTemplate.opsForValue().get(registerRequest.getPhoneNumber());
         if (!registerRequest.getVerificationCode().equals(realSmsCode)) {
             throw new CustomException("Verification code error");

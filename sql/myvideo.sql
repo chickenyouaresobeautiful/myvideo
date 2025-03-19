@@ -1,0 +1,125 @@
+CREATE TABLE users
+(
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username        VARCHAR(50) NOT NULL UNIQUE,
+    email           VARCHAR(100) UNIQUE,
+    phone_number    VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at      TIMESTAMP              DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    profile_picture VARCHAR(255),
+    role            ENUM ('USER', 'ADMIN') DEFAULT 'USER'
+);
+
+CREATE TABLE videos
+(
+    id            BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id       BIGINT UNSIGNED NOT NULL,
+    title         VARCHAR(255)    NOT NULL,
+    description   TEXT,
+    url           VARCHAR(255)    NOT NULL,
+    thumbnail_url VARCHAR(255),
+    duration      INT UNSIGNED,
+    views         BIGINT UNSIGNED            DEFAULT 0,
+    created_at    TIMESTAMP                  DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP                  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    privacy       ENUM ('PUBLIC', 'PRIVATE') DEFAULT 'PUBLIC',
+    category_id   BIGINT UNSIGNED
+);
+
+CREATE TABLE categories
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments
+(
+    id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    video_id   BIGINT UNSIGNED NOT NULL,
+    user_id    BIGINT UNSIGNED NOT NULL,
+    content    TEXT            NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE likes_dislikes
+(
+    id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    video_id   BIGINT UNSIGNED NOT NULL,
+    user_id    BIGINT UNSIGNED NOT NULL,
+    type       TINYINT         NOT NULL, -- 1 for like, -1 for dislike
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE play_history
+(
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id         BIGINT UNSIGNED NOT NULL,
+    video_id        BIGINT UNSIGNED NOT NULL,
+    last_watched_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    progress        INT UNSIGNED DEFAULT 0
+);
+
+CREATE TABLE favorites
+(
+    id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id    BIGINT UNSIGNED NOT NULL,
+    video_id   BIGINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE subscriptions
+(
+    id               BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    subscriber_id    BIGINT UNSIGNED NOT NULL,
+    subscribed_to_id BIGINT UNSIGNED NOT NULL,
+    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tags
+(
+    id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name       VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE video_tags
+(
+    id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    video_id   BIGINT UNSIGNED NOT NULL,
+    tag_id     BIGINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE reports
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    reported_by BIGINT UNSIGNED NOT NULL,
+    video_id    BIGINT UNSIGNED,
+    comment_id  BIGINT UNSIGNED,
+    reason      TEXT            NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE advertisements
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title       VARCHAR(255) NOT NULL,
+    description TEXT,
+    url         VARCHAR(255) NOT NULL,
+    start_time  TIMESTAMP    NOT NULL,
+    end_time    TIMESTAMP    NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE video_advertisements
+(
+    id               BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    video_id         BIGINT UNSIGNED NOT NULL,
+    advertisement_id BIGINT UNSIGNED NOT NULL,
+    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,6 +1,7 @@
 package com.daiweij.myvedio.filter;
 
 import com.daiweij.myvedio.common.utils.JwtUtils;
+import com.daiweij.myvedio.common.utils.LogUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,14 +17,12 @@ import java.io.IOException;
 
 @WebFilter
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = getJwtFromRequest(request);
-        logger.info("doFilterInternal token: {}", token);
+        LogUtil.info(this.getClass(), "doFilterInternal token: " + token);
 
         if (token != null && validateToken(token)) {
             Claims claims = JwtUtils.parseToken(token);
