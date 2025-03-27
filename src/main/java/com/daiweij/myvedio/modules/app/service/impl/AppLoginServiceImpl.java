@@ -35,7 +35,7 @@ public class AppLoginServiceImpl implements AppLoginService {
         // 根据账号类型查询用户
         UsersEntity loginUser = queryByAccountType(loginRequest.getLoginType(), loginRequest.getUsername());
         // 校验密码
-        LogUtil.info(this.getClass(), DigestUtils.sha256Hex(loginRequest.getPassword()));
+        LogUtil.info(this.getClass(), "login() password:" + DigestUtils.sha256Hex(loginRequest.getPassword()));
         if (!loginUser.getPassword().equals(DigestUtils.sha256Hex(loginRequest.getPassword()))) {
             throw new CustomException("Password error");
         }

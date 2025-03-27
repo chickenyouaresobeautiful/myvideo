@@ -84,7 +84,7 @@ public class UsersController {
             Path filePath = uploadDir.resolve(fileName);
             // 保存文件到服务器
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            //todo 可选：将 fileName 保存到数据库中，与当前用户关联
+            // 将 fileName 保存到数据库中，与当前用户关联
             usersService.updateUserAvatar(userId, fileName);
             return R.success("头像上传成功，文件名：" + fileName);
         } catch (IOException e) {
